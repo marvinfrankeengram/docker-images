@@ -1,7 +1,6 @@
 # This Dockerfile is used to build an image containing basic stuff to be used as a Jenkins slave build node.
-FROM ubuntu:bionic
-MAINTAINER Ervin Varga <ervin.varga@gmail.com>
-MAINTAINER Sylvain Maucourt <smaucourt@gmail.com>
+FROM ubuntu:disco
+MAINTAINER Cornelius Wichering <cornelius.wichering@engram.de>
 
 # In case you need proxy
 #RUN echo 'Acquire::http::Proxy "http://127.0.0.1:8080";' >> /etc/apt/apt.conf
@@ -31,9 +30,32 @@ RUN apt-get -q update &&\
     DEBIAN_FRONTEND="noninteractive" apt-get -q install -y -o Dpkg::Options::="--force-confnew" --no-install-recommends openjdk-8-jre-headless &&\
     apt-get -q clean -y && rm -rf /var/lib/apt/lists/* && rm -f /var/cache/apt/*.bin
 
+# Install ECR credentials helper
+RUN apt-get -q update &&\
+    DEBIAN_FRONTEND="noninteractive" apt-get -q install -y -o Dpkg::Options::="--force-confnew" --no-install-recommends amazon-ecr-credential-helper &&\
+    apt-get -q clean -y && rm -rf /var/lib/apt/lists/* && rm -f /var/cache/apt/*.bin
+
 # Set user jenkins to the image
 RUN useradd -m -d /home/jenkins -s /bin/sh jenkins &&\
     echo "jenkins:jenkins" | chpasswd
+
+# Install git
+RUN apt-get -q update &&\
+    DEBIAN_FRONTEND="noninteractive" apt-get -q install -y -o Dpkg::Options::="--force-confnew" --no-install-recommends git &&\
+    apt-get -q clean -y && rm -rf /var/lib/apt/lists/* && rm -f /var/cache/apt/*.bin
+
+# Install wget
+RUN apt-get -q update &&\
+    DEBIAN_FRONTEND="noninteractive" apt-get -q install -y -o Dpkg::Options::="--force-confnew" --no-install-recommends wget &&\
+    apt-get -q clean -y && rm -rf /var/lib/apt/lists/* && rm -f /var/cache/apt/*.bin
+
+# Install maven 3.6.3
+RUN wget https://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
+    tar -zxf apache-maven-3.6.3-bin.tar.gz && \
+    mv apache-maven-3.6.3 /usr/local && \
+    rm -f apache-maven-3.6.3-bin.tar.gz && \
+    ln -s /usr/local/apache-maven-3.6.3/bin/mvn /usr/bin/mvn && \
+    ln -s /usr/local/apache-maven-3.6.3 /usr/local/apache-maven
 
 # Standard SSH port
 EXPOSE 22

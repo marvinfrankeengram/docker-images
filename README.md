@@ -1,6 +1,13 @@
-Docker Images Project
-=====================
+# Jenkins-Slave
 
-Contains various [Docker][1] build files for creating Docker images (base images, intermediate images, etc.). Each folder is designated to one particular image, and has a Dockerfile (besides other build related stuff). Every Dockerfile is well commented and should be consulted for more information what it represents.
+This is another remix of existing docker images to easily run jenkins slaves.
 
-[1]: http://docker.io
+Inspired by evarga/docker-images and mzagar/jenkins-slave-jdk-maven-git
+
+- FROM ubuntu:disco
+- git
+- Open JDK 8
+- ECR credentials helper
+- Maven 3.6.3
+- Jenkins user
+- SSH access
