@@ -14,3 +14,4 @@ Inspired by evarga/docker-images and mzagar/jenkins-slave-jdk-maven-git
 - Maven 3.6.3
 - Jenkins user
 - SSH access
+- Various libraries needed to run chrome via puppeteer
